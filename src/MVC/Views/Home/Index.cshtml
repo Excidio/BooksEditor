@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BooksEditor.MVC.Models.BookModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@foreach (var bookModel in Model)
+{
+    <table border="1" cellpadding="10">
+        <tr>
+            <td>Header :</td>
+            <td>@Html.TextBox("Header", bookModel.Header)</td>
+        </tr>
+        <tr>
+            <td>NumberOfPages :</td>
+            <td>@Html.TextBox("NumberOfPages", bookModel.NumberOfPages)</td>
+        </tr>
+        <tr>
+            <td>ISBN :</td>
+            <td>@Html.TextBox("ISBN", bookModel.ISBN)</td>
+        </tr>
+        <tr>
+            <td>PublishDate :</td>
+            <td>@Html.TextBox("PublishDate", bookModel.PublishDate)</td>
+        </tr>
+        <tr>
+            <td>PublishingHouse :</td>
+            <td>@Html.TextBox("PublishingHouse", bookModel.PublishingHouse)</td>
+        </tr>
+    </table>
+}

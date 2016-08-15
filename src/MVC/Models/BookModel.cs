@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using BooksEditor.Domain;
 
-namespace BooksEditor.Domain
+namespace BooksEditor.MVC.Models
 {
-    public class Book
+    public class BookModel
     {
-        public int Id { get; set; }
-
         public string Header { get; set; }
 
         public int NumberOfPages { get; set; }
@@ -19,6 +18,6 @@ namespace BooksEditor.Domain
 
         //public string Image { get; set; } TODO: Add image
 
-        public IEnumerable<Author> Authors { get; set; }
+        //public IEnumerable<AuthorModel> Authors { get; set; }
     }
 }
