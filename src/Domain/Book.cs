@@ -17,7 +17,7 @@ namespace BooksEditor.Domain
 
         public string ISBN { get; set; }
 
-        //public string Image { get; set; } TODO: Add image
+        public byte[] Image { get; set; }
 
         public IEnumerable<Author> Authors { get; set; }
     }

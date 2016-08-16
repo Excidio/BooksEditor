@@ -49,7 +49,7 @@ namespace BooksEditor.MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(BookModel model)
+        public ActionResult Edit(BookModel model, HttpPostedFileBase imageData)
         {
             if (ModelState.IsValid)
             {

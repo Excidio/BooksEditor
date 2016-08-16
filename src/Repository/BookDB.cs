@@ -49,6 +49,7 @@ namespace BooksEditor.Repository
             bookDB.NumberOfPages = book.NumberOfPages;
             bookDB.PublishingYear = book.PublishingYear;
             bookDB.PublishingHouse = book.PublishingHouse;
+            bookDB.Image = book.Image;
         }
 
         public static IEnumerable<Book> GetAll()
