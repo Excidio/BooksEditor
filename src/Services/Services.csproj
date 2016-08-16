@@ -41,10 +41,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Implementation\BookService.cs" />
+    <Compile Include="Implementation\AuthorService.cs" />
+    <Compile Include="Interfaces\IAuthorService.cs" />
     <Compile Include="Interfaces\IBookService.cs" />
+    <Compile Include="Isbn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{277563DF-F2DC-4152-B4C6-0E0C34849F7E}</Project>
+      <Name>Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Repository\Repository.csproj">
       <Project>{C60EF35B-98C0-490D-9B75-C18B2D1671E4}</Project>
       <Name>Repository</Name>
