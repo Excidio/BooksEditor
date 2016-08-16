@@ -11,6 +11,8 @@ namespace BooksEditor.Repository.Interfaces
 
         IEnumerable<Book> FindAll();
 
+        IEnumerable<Book> FindAllWithRelated();
+
         void Remove(Book book);
     }
 }

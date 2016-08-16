@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorDB.cs" />
+    <Compile Include="BookAuthorDB.cs" />
     <Compile Include="BookDB.cs" />
     <Compile Include="Implementation\AuthorRepository.cs" />
+    <Compile Include="Implementation\BookAuthorRepository.cs" />
     <Compile Include="Implementation\BookRepository.cs" />
     <Compile Include="Interfaces\IAuthorRepository.cs" />
     <Compile Include="Interfaces\IBookRepository.cs" />

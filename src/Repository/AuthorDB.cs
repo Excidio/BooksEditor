@@ -6,37 +6,44 @@ namespace BooksEditor.Repository
 {
     internal static class AuthorDB
     {
-        private static IList<Author> Values { get; set; }
+        private static readonly IList<Author> Values;
 
         static AuthorDB()
         {
             Values = new List<Author>
             {
-                new Author
-                {
-                    FirstName = "aaa",
-                    LastName = "bbb"
-                }
+                new Author { Id = 1, FirstName = "Jeffrey", LastName = "Richter"},
+                new Author { Id = 2, FirstName = "Martin", LastName = "Fowler"},
+                new Author { Id = 3, FirstName = "Kent", LastName = "Beck"},
+                new Author { Id = 4, FirstName = "John", LastName = "Brant"},
+                new Author { Id = 5, FirstName = "William", LastName = "Opdyke"},
+                new Author { Id = 6, FirstName = "Don", LastName = "Roberts"},
+                new Author { Id = 7, FirstName = "Erich", LastName = "Gamma"}
             };
         }
 
-        public static void Add(Author book)
+        public static void Add(Author author)
         {
-            book.Id = GetLastID() + 1;
-            Values.Add(book);
+            author.Id = GetLastID() + 1;
+            Values.Add(author);
         }
 
-        public static void Save(Author book)
+        public static void Save(Author author)
         {
-            var bookDB = Values.First(b => b.Id == book.Id);
+            var bookDB = Values.First(b => b.Id == author.Id);
 
-            bookDB.FirstName = book.FirstName;
-            bookDB.LastName = book.LastName;
+            bookDB.FirstName = author.FirstName;
+            bookDB.LastName = author.LastName;
         }
 
-        public static void Remove(Author book)
+        public static IEnumerable<Author> GetAll()
         {
-            Values.Remove(book);
+            return Values;
+        }
+
+        public static void Remove(Author author)
+        {
+            Values.Remove(author);
         }
 
         private static int GetLastID()

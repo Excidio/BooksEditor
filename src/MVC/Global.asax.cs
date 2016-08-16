@@ -16,9 +16,8 @@ namespace BooksEditor.MVC
             Mapper.Initialize(cfg => {
                 cfg.CreateMap<Book, BookModel>();
                 cfg.CreateMap<BookModel, Book>();
-                //.ForMember(d => d.UserName,
-                //    opt => opt.MapFrom(src => userName)
-                //);
+                cfg.CreateMap<Author, AuthorModel>();
+                cfg.CreateMap<AuthorModel, Author>();
             });
         }
     }

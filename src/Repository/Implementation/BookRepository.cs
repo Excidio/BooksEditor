@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BooksEditor.Domain;
 using BooksEditor.Repository.Interfaces;
 
@@ -6,6 +7,8 @@ namespace BooksEditor.Repository.Implementation
 {
     public class BookRepository : IBookRepository
     {
+        private static readonly BookAuthorRepository BookAuthorRepository = new BookAuthorRepository();
+
         public void Add(Book book)
         {
             BookDB.Add(book);
@@ -18,7 +21,18 @@ namespace BooksEditor.Repository.Implementation
 
         public IEnumerable<Book> FindAll()
         {
-            return BookDB.FindAll();
+            return BookDB.GetAll();
+        }
+
+        public IEnumerable<Book> FindAllWithRelated()
+        {
+            var books = BookDB.GetAll().ToList();
+            foreach (var book in books)
+            {
+                book.Authors = BookAuthorRepository.GetAuthors(book);
+            }
+
+            return books;
         }
 
         public void Remove(Book book)

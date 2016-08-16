@@ -7,23 +7,29 @@ namespace BooksEditor.Repository
 {
     internal static class BookDB
     {
-        private static IList<Book> Books { get; set; }
+        private static readonly IList<Book> Values;
 
         static BookDB()
         {
-            Books = new List<Book>
+            Values = new List<Book>
             {
                 new Book
                 {
-                    Header = "123",
-                    ISBN = "111",
-                    NumberOfPages = 100,
-                    PublishDate = new DateTime(2016, 01, 01),
-                    PublishingHouse = "no",
-                    Authors = new List<Author>
-                    {
-                        new Author { FirstName = "aaa", LastName = "bbb"}
-                    }
+                    Id = 1,
+                    Header = "CLR via C#, 4 edition",
+                    ISBN = "978-5-496-00433-6",
+                    NumberOfPages = 896,
+                    PublishingYear = 2012,
+                    PublishingHouse = "O’Reilly Media, Inc"
+                },
+                new Book
+                {
+                    Id = 2,
+                    Header = "Refactoring: Improving the Design of Existing Code",
+                    ISBN = "978-5-93286-045-8",
+                    NumberOfPages = 432,
+                    PublishingYear = 2008,
+                    PublishingHouse = "Addison Wesley Longman, Inc."
                 }
             };
         }
@@ -31,33 +37,33 @@ namespace BooksEditor.Repository
         public static void Add(Book book)
         {
             book.Id = GetLastID() + 1;
-            Books.Add(book);
+            Values.Add(book);
         }
 
         public static void Save(Book book)
         {
-            var bookDB = Books.First(b => b.Id == book.Id);
+            var bookDB = Values.First(b => b.Id == book.Id);
 
             bookDB.Header = book.Header;
             bookDB.ISBN = book.ISBN;
             bookDB.NumberOfPages = book.NumberOfPages;
-            bookDB.PublishDate = book.PublishDate;
+            bookDB.PublishingYear = book.PublishingYear;
             bookDB.PublishingHouse = book.PublishingHouse;
         }
 
-        public static IEnumerable<Book> FindAll()
+        public static IEnumerable<Book> GetAll()
         {
-            return Books;
+            return Values;
         }
 
         public static void Remove(Book book)
         {
-            Books.Remove(book);
+            Values.Remove(book);
         }
 
         private static int GetLastID()
         {
-            return Books.Max(p => p.Id);
+            return Values.Max(p => p.Id);
         }
     }
 }

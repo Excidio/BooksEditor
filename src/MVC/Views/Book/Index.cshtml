@@ -1,0 +1,49 @@
+﻿@model IEnumerable<BooksEditor.MVC.Models.BookModel>
+
+@{
+    ViewBag.Title = "Books";
+}
+
+<h2>@ViewBag.Title</h2>
+<section id="CustomerMasterList" class="float-left">
+    <table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div>
+                        <h1>@item.Header</h1>
+                        <ul>
+                            <li>@item.PublishingHouse</li>
+                            <li>@item.PublishingYear</li>
+                            <li>
+                                @Html.ActionLink(
+                                        "Edit Details",
+                                        "Edit",
+                                        new { id = item.Id },
+                                        new { @class = "book-edit" })
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</section>
+
+<div id="CustomerDetail"></div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".book-edit").on("click", function (e) {
+                e.preventDefault();
+
+                $.get($(this).prop("href"),
+                    function (response) {
+                        $("#CustomerDetail").html(response);
+                    });
+            });
+        });
+    </script>
+}

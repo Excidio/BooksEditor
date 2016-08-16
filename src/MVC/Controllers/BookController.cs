@@ -21,6 +21,12 @@ namespace BooksEditor.MVC.Controllers
         }
 
         [HttpGet]
+        public ActionResult Index()
+        {
+            return View(Mapper.Map<IEnumerable<BookModel>>(_bookRepository.FindAll()));
+        }
+
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
@@ -34,12 +40,12 @@ namespace BooksEditor.MVC.Controllers
                 _bookRepository.Add(ModelToEntity(model));
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int id)
         {
-            return View(Mapper.Map<BookModel>(_bookRepository.FindAll().First()));
+            return PartialView(Mapper.Map<BookModel>(_bookRepository.FindAllWithRelated().First(p => p.Id == id)));
         }
 
         [HttpPost]
@@ -50,7 +56,7 @@ namespace BooksEditor.MVC.Controllers
                 _bookRepository.Save(ModelToEntity(model));
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -61,7 +67,7 @@ namespace BooksEditor.MVC.Controllers
                 _bookRepository.Remove(ModelToEntity(model));
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
 
         private static Book ModelToEntity(BookModel model)

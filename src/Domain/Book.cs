@@ -13,7 +13,7 @@ namespace BooksEditor.Domain
 
         public string PublishingHouse { get; set; }
 
-        public DateTime PublishDate { get; set; }
+        public int PublishingYear { get; set; }
 
         public string ISBN { get; set; }
 
