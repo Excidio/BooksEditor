@@ -2,7 +2,8 @@
 using System.Web.Mvc;
 using AutoMapper;
 using BooksEditor.MVC.Models;
-using BooksEditor.Repository;
+using BooksEditor.Repository.Implementation;
+using BooksEditor.Repository.Interfaces;
 
 namespace BooksEditor.MVC.Controllers
 {

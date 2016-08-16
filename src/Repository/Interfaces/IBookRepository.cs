@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BooksEditor.Domain;
 
-namespace BooksEditor.Repository
+namespace BooksEditor.Repository.Interfaces
 {
     public interface IBookRepository
     {

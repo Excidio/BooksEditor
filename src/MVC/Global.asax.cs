@@ -14,12 +14,11 @@ namespace BooksEditor.MVC
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             Mapper.Initialize(cfg => {
-
-                string userName = null;
-                                         cfg.CreateMap<Book, BookModel>();
-                                         //.ForMember(d => d.UserName,
-                                         //    opt => opt.MapFrom(src => userName)
-                                         //);
+                cfg.CreateMap<Book, BookModel>();
+                cfg.CreateMap<BookModel, Book>();
+                //.ForMember(d => d.UserName,
+                //    opt => opt.MapFrom(src => userName)
+                //);
             });
         }
     }

@@ -11,6 +11,7 @@
         <tr>
             <td>Header :</td>
             <td>@Html.TextBox("Header", bookModel.Header)</td>
+            <td>@Html.ValidationMessage("Header")</td>
         </tr>
         <tr>
             <td>NumberOfPages :</td>
@@ -27,6 +28,7 @@
         <tr>
             <td>PublishingHouse :</td>
             <td>@Html.TextBox("PublishingHouse", bookModel.PublishingHouse)</td>
+            <td>@Html.ValidationMessage("PublishingHouse")</td>
         </tr>
     </table>
 }
