@@ -113,6 +113,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Models\AuthorModel.cs" />
     <Compile Include="Models\BookModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,6 +145,10 @@
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{277563DF-F2DC-4152-B4C6-0E0C34849F7E}</Project>
       <Name>Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Policy\Policy.csproj">
+      <Project>{DAD23DB2-43EF-43C9-B752-C7CE55C8B743}</Project>
+      <Name>Policy</Name>
     </ProjectReference>
     <ProjectReference Include="..\Repository\Repository.csproj">
       <Project>{C60EF35B-98C0-490D-9B75-C18B2D1671E4}</Project>

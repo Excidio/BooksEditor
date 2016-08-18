@@ -1,6 +1,5 @@
 ﻿using System;
 using BooksEditor.Domain;
-using BooksEditor.Repository.Implementation;
 using BooksEditor.Repository.Interfaces;
 using BooksEditor.Services.Interfaces;
 
@@ -10,9 +9,9 @@ namespace BooksEditor.Services.Implementation
     {
         private readonly IAuthorRepository _authorRepository;
 
-        public AuthorService(/*IBookRepository bookRepository*/)
+        public AuthorService(IAuthorRepository authorRepository)
         {
-            _authorRepository = new AuthorRepository();//bookRepository;
+            _authorRepository = authorRepository;
         }
 
         public void Add(Author author)

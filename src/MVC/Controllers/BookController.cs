@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using BooksEditor.Domain;
+using BooksEditor.MVC.Helpers;
 using BooksEditor.MVC.Models;
-using BooksEditor.Repository.Implementation;
 using BooksEditor.Repository.Interfaces;
 
 namespace BooksEditor.MVC.Controllers
@@ -15,9 +14,9 @@ namespace BooksEditor.MVC.Controllers
     {
         private readonly IBookRepository _bookRepository;
 
-        public BookController(/*IBookRepository bookRepository*/)
+        public BookController(IBookRepository bookRepository)
         {
-            _bookRepository = new BookRepository();//bookRepository;
+            _bookRepository = bookRepository;
         }
 
         [HttpGet]
@@ -37,7 +36,7 @@ namespace BooksEditor.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _bookRepository.Add(ModelToEntity(model));
+                _bookRepository.Add(Mapper.Map<Book>(model));
             }
 
             return RedirectToAction("Index");
@@ -53,7 +52,10 @@ namespace BooksEditor.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _bookRepository.Save(ModelToEntity(model));
+                var entity = Mapper.Map<Book>(model);
+                entity.Image = FileHelper.ConvertToByteArray(imageData);
+
+                _bookRepository.Save(entity);
             }
 
             return RedirectToAction("Index");
@@ -64,15 +66,10 @@ namespace BooksEditor.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _bookRepository.Remove(ModelToEntity(model));
+                _bookRepository.Remove(Mapper.Map<Book>(model));
             }
 
             return RedirectToAction("Index");
-        }
-
-        private static Book ModelToEntity(BookModel model)
-        {
-            return Mapper.Map<Book>(model);
         }
     }
 }

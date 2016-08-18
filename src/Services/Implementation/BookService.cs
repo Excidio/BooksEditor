@@ -1,5 +1,4 @@
-﻿using BooksEditor.Repository.Implementation;
-using BooksEditor.Repository.Interfaces;
+﻿using BooksEditor.Repository.Interfaces;
 using BooksEditor.Services.Interfaces;
 
 namespace BooksEditor.Services.Implementation
@@ -8,9 +7,9 @@ namespace BooksEditor.Services.Implementation
     {
         private readonly IBookRepository _bookRepository;
 
-        public BookService(/*IBookRepository bookRepository*/)
+        public BookService(IBookRepository bookRepository)
         {
-            _bookRepository = new BookRepository();//bookRepository;
+            _bookRepository = bookRepository;
         }
 
 

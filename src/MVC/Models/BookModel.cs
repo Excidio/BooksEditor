@@ -25,7 +25,7 @@ namespace BooksEditor.MVC.Models
         [Required]
         public string ISBN { get; set; }
 
-        //public byte[] Image { get; set; }
+        public string Image { get; set; }
 
         public IEnumerable<AuthorModel> Authors { get; set; }
     }

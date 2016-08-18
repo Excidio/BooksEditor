@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using AutoMapper;
 using BooksEditor.MVC.Models;
-using BooksEditor.Repository.Implementation;
 using BooksEditor.Repository.Interfaces;
 
 namespace BooksEditor.MVC.Controllers
@@ -11,9 +10,9 @@ namespace BooksEditor.MVC.Controllers
     {
         private readonly IBookRepository _bookRepository;
 
-        public HomeController(/*IBookRepository bookRepository*/)
+        public HomeController(IBookRepository bookRepository)
         {
-            _bookRepository = new BookRepository();//bookRepository;
+            _bookRepository = bookRepository;
         }
 
         public ActionResult Index()
