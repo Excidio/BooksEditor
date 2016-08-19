@@ -20,9 +20,10 @@ namespace BooksEditor.MVC.Controllers
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public JsonResult Index()
         {
-            return View(Mapper.Map<IEnumerable<BookModel>>(_bookRepository.FindAll()));
+            //return View(Mapper.Map<IEnumerable<BookModel>>(_bookRepository.FindAll()));
+            return Json(new { Books = Mapper.Map<IEnumerable<BookModel>>(_bookRepository.FindAll()) }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -48,14 +49,11 @@ namespace BooksEditor.MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(BookModel model, HttpPostedFileBase imageData)
+        public ActionResult Edit(BookModel model)
         {
             if (ModelState.IsValid)
             {
-                var entity = Mapper.Map<Book>(model);
-                entity.Image = FileHelper.ConvertToByteArray(imageData);
-
-                _bookRepository.Save(entity);
+                _bookRepository.Save(Mapper.Map<Book>(model));
             }
 
             return RedirectToAction("Index");

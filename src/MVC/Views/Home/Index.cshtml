@@ -1,34 +1,206 @@
-﻿@model IEnumerable<BooksEditor.MVC.Models.BookModel>
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "BookEditor";
 }
+<div class="container-fluid">
+    <div id="BookMasterList" class="col-xs-6 col-md-4">
+        <div data-bind="foreach: books">
+            <div class="well">
+                <div class="form-group text-center">
+                    <img data-bind="attr: {src: Image}" alt="Image" width="200" height="260"/>
+                </div>
+                <div class="form-group">
+                    <h3 class="text-overflow-ellipsis" data-bind="text: Header"></h3>
+                </div>
+                <ul>
+                    <li data-bind="click: $parent.EditForm">Edit Details</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    @using (Html.BeginForm("Edit", "Book", FormMethod.Post, new { enctype = "multipart/form-data", data_bind = "submit: saveBook" }))
+    {
+        @Html.AntiForgeryToken()
+        
+        <div class="col-xs-12 col-md-8" data-bind="with: selectedBook">
+            <h4>Edit details</h4>
+            <hr/>
 
-<h2>Index</h2>
+            <div class="container">
+                <div class="form-group">
+                    <img id="Image" data-bind="attr: {src: Image}" alt="Image"/>
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Browse… <input data-bind="event: {change: $parent.imageUpload}" type="file" accept="image/*" style="display: none;"/>
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly="">
+                    </div>
+                    @*<br/>
+                    <span class="btn btn-default btn-file">
+                        Browse <input data-bind="event: {change: $parent.imageUpload}" type="file" accept="image/*" />
+                    </span>*@
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="Header">Header:</label>
+                    <div class="col-md-10">
+                        <input id="Header" class="form-control" type="text" data-bind="value: Header"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="NumberOfPages">Number of pages:</label>
+                    <div class="col-md-10">
+                        <input id="NumberOfPages" class="form-control" type="number" data-bind="value: NumberOfPages"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="PublishingHouse">Publishing house:</label>
+                    <div class="col-md-10">
+                        <input id="PublishingHouse" class="form-control" type="text" data-bind="value: PublishingHouse"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="PublishingYear">Publishing year:</label>
+                    <div class="col-md-10">
+                        <input id="PublishingYear" class="form-control" type="number" data-bind="value: PublishingYear"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="ISBN">ISBN:</label>
+                    <div class="col-md-10">
+                        <input id="ISBN" class="form-control" type="text" data-bind="value: ISBN"/>
+                    </div>
+                </div>
 
-@foreach (var bookModel in Model)
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-default"/>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+}
+</div>
+
+@section scripts
 {
-    <table border="1" cellpadding="10">
-        <tr>
-            <td>Header :</td>
-            <td>@Html.TextBox("Header", bookModel.Header)</td>
-            <td>@Html.ValidationMessage("Header")</td>
-        </tr>
-        <tr>
-            <td>NumberOfPages :</td>
-            <td>@Html.TextBox("NumberOfPages", bookModel.NumberOfPages)</td>
-        </tr>
-        <tr>
-            <td>ISBN :</td>
-            <td>@Html.TextBox("ISBN", bookModel.ISBN)</td>
-        </tr>
-        <tr>
-            <td>PublishDate :</td>
-            <td>@Html.TextBox("PublishDate", bookModel.PublishDate)</td>
-        </tr>
-        <tr>
-            <td>PublishingHouse :</td>
-            <td>@Html.TextBox("PublishingHouse", bookModel.PublishingHouse)</td>
-            <td>@Html.ValidationMessage("PublishingHouse")</td>
-        </tr>
-    </table>
+    <script>
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        (function () {
+            var BookViewModel = function (data) {
+                console.log(data);
+                var self = this;
+
+                self.Id = ko.observable(data.Id);
+                self.Header = ko.observable(data.Header);
+                self.NumberOfPages = ko.observable(data.NumberOfPages);
+                self.PublishingHouse = ko.observable(data.PublishingHouse);
+                self.PublishingYear = ko.observable(data.PublishingYear);
+                self.ISBN = ko.observable(data.ISBN);
+                self.Image = ko.observable(data.Image);
+
+                return self;
+            }
+
+
+            var MSViewModel = function () {
+                var self = this;
+
+                self.books = ko.observableArray([]);
+                self.selectedBook = ko.observable();
+
+                self.EditForm = function (book) { self.selectedBook(book); };
+
+                self.imageUpload = function(data, e) {
+                    var file = e.target.files[0];
+                    var reader = new FileReader();
+
+                    reader.onloadend = function() {
+                        data.Image(reader.result);
+                    };
+
+                    if (file) {
+                        reader.readAsDataURL(file);
+                    }
+                };
+
+                self.saveBook = function() {
+                    $.ajax({
+                        url: "/Book/Edit/",
+                        type: "POST",
+                        data: ko.toJSON(self.selectedBook),
+                        contentType: "application/json; charset=utf-8",
+                        async: false,
+                        success: function(result) {
+                            //if (result.url) {
+                            //    location.href = result.url;
+                            //}
+                        }
+                    });
+                };
+
+                self.loadBooks = function () {
+                    $.ajax({
+                        url: "/Book",
+                        type: "GET"
+                    }).done(function (data) {
+                        var mappedBooks = $.map(data.Books, function (item) { return new BookViewModel(item); });
+                        self.books(mappedBooks);
+                    }).error(function (err) {
+                        //self.ErrorMessage("Error!!!!" + err.status);
+                    });
+                };
+
+                //$.getJSON("/tasks", function (allData) {
+                //    var mappedTasks = $.map(allData, function (item) { return new Task(item) });
+                //    self.tasks(mappedTasks);
+                //});
+
+                self.loadBooks();
+
+                //The Fucntion to make call to WEB API
+                //and returns the Customer Object 
+                
+            };
+
+            ko.applyBindings(new MSViewModel());
+
+        })();
+    </script>
 }
+
+<style type="text/css">
+    .text-overflow-ellipsis {
+        -moz-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+</style>

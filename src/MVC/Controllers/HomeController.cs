@@ -1,25 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using AutoMapper;
-using BooksEditor.MVC.Models;
-using BooksEditor.Repository.Interfaces;
+﻿using System.Web.Mvc;
 
 namespace BooksEditor.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IBookRepository _bookRepository;
-
-        public HomeController(IBookRepository bookRepository)
-        {
-            _bookRepository = bookRepository;
-        }
-
         public ActionResult Index()
         {
-            var model = Mapper.Map<IEnumerable<BookModel>>(_bookRepository.FindAll());
-
-            return View(model);
+            return View();
         }
     }
 }

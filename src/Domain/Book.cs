@@ -17,7 +17,10 @@ namespace BooksEditor.Domain
 
         public string ISBN { get; set; }
 
-        public byte[] Image { get; set; }
+        /// <summary>
+        /// Image in base64
+        /// </summary>
+        public string Image { get; set; }
 
         public IEnumerable<Author> Authors { get; set; }
     }

@@ -20,9 +20,9 @@ namespace BooksEditor.MVC
             _websitePolicy = new WebsitePolicy();
             _websitePolicy.Init();
 
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<Book, BookModel>()
-                   .ForMember(dest => dest.Image, opts => opts.MapFrom(src => Convert.ToBase64String(src.Image)));
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Book, BookModel>();
                 cfg.CreateMap<BookModel, Book>();
                 cfg.CreateMap<Author, AuthorModel>();
                 cfg.CreateMap<AuthorModel, Author>();
