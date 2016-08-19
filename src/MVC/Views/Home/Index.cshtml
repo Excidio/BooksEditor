@@ -18,7 +18,7 @@
         </div>
     </div>
     
-    @using (Html.BeginForm("Edit", "Book", FormMethod.Post, new { enctype = "multipart/form-data", data_bind = "submit: saveBook" }))
+    @using (Html.BeginForm("Save", "Book", FormMethod.Post, new { enctype = "multipart/form-data", data_bind = "submit: saveBook" }))
     {
         @Html.AntiForgeryToken()
         
@@ -134,7 +134,7 @@
 
                 self.saveBook = function() {
                     $.ajax({
-                        url: "/Book/Edit/",
+                        url: "api/Book/Edit",
                         type: "POST",
                         data: ko.toJSON(self.selectedBook),
                         contentType: "application/json; charset=utf-8",
@@ -149,10 +149,10 @@
 
                 self.loadBooks = function () {
                     $.ajax({
-                        url: "/Book",
+                        url: "api/Book/GetAll",
                         type: "GET"
                     }).done(function (data) {
-                        var mappedBooks = $.map(data.Books, function (item) { return new BookViewModel(item); });
+                        var mappedBooks = $.map(data, function (item) { return new BookViewModel(item); });
                         self.books(mappedBooks);
                     }).error(function (err) {
                         //self.ErrorMessage("Error!!!!" + err.status);

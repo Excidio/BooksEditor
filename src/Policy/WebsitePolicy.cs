@@ -1,18 +1,13 @@
-﻿using System.Web.Mvc;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 
 namespace BooksEditor.Policy
 {
     public class WebsitePolicy
     {
-        public void Init()
+        public void Init(UnityContainer container)
         {
-            var container = new UnityContainer();
-
             RepositoriesPolicy.Init(container);
             ServicesPolicy.Init(container);
-
-            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
 }
