@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BooksEditor.Domain;
 
@@ -7,6 +6,7 @@ namespace BooksEditor.Repository
 {
     internal static class BookDB
     {
+        private static readonly object SyncObject = new object();
         private static readonly IList<Book> Values;
 
         static BookDB()
@@ -38,20 +38,26 @@ namespace BooksEditor.Repository
 
         public static void Add(Book book)
         {
-            book.Id = GetLastID() + 1;
-            Values.Add(book);
+            lock (SyncObject)
+            {
+                book.Id = Values.Max(p => p.Id) + 1;
+                Values.Add(book);
+            }
         }
 
         public static void Save(Book book)
         {
-            var bookDB = Values.First(b => b.Id == book.Id);
+            lock (SyncObject)
+            {
+                var bookDB = Values.First(b => b.Id == book.Id);
 
-            bookDB.Header = book.Header;
-            bookDB.ISBN = book.ISBN;
-            bookDB.NumberOfPages = book.NumberOfPages;
-            bookDB.PublishingYear = book.PublishingYear;
-            bookDB.PublishingHouse = book.PublishingHouse;
-            bookDB.Image = book.Image;
+                bookDB.Header = book.Header;
+                bookDB.ISBN = book.ISBN;
+                bookDB.NumberOfPages = book.NumberOfPages;
+                bookDB.PublishingYear = book.PublishingYear;
+                bookDB.PublishingHouse = book.PublishingHouse;
+                bookDB.Image = book.Image;
+            }
         }
 
         public static IEnumerable<Book> GetAll()
@@ -61,12 +67,10 @@ namespace BooksEditor.Repository
 
         public static void Remove(Book book)
         {
-            Values.Remove(book);
-        }
-
-        private static int GetLastID()
-        {
-            return Values.Max(p => p.Id);
+            lock (SyncObject)
+            {
+                Values.Remove(book);
+            }
         }
     }
 }

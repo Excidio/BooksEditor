@@ -6,6 +6,7 @@ namespace BooksEditor.Repository
 {
     internal static class AuthorDB
     {
+        private static readonly object SyncObject = new object();
         private static readonly IList<Author> Values;
 
         static AuthorDB()
@@ -24,16 +25,22 @@ namespace BooksEditor.Repository
 
         public static void Add(Author author)
         {
-            author.Id = GetLastID() + 1;
-            Values.Add(author);
+            lock (SyncObject)
+            {
+                author.Id = Values.Max(p => p.Id) + 1;
+                Values.Add(author);
+            }
         }
 
         public static void Save(Author author)
         {
-            var bookDB = Values.First(b => b.Id == author.Id);
+            lock (SyncObject)
+            {
+                var bookDB = Values.First(b => b.Id == author.Id);
 
-            bookDB.FirstName = author.FirstName;
-            bookDB.LastName = author.LastName;
+                bookDB.FirstName = author.FirstName;
+                bookDB.LastName = author.LastName;
+            }
         }
 
         public static IEnumerable<Author> GetAll()
@@ -43,12 +50,10 @@ namespace BooksEditor.Repository
 
         public static void Remove(Author author)
         {
-            Values.Remove(author);
-        }
-
-        private static int GetLastID()
-        {
-            return Values.Max(p => p.Id);
+            lock (SyncObject)
+            {
+                Values.Remove(author);
+            }
         }
     }
 }
