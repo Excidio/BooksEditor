@@ -72,13 +72,31 @@
                     </div>
                 </div>
 
+                <button data-bind="click: addAuthor">Add author</button>
+                <table id="Authors" data-bind="visible: Authors().length >= 1">
+                    <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: Authors">
+                    <tr>
+                        <td><input id="FirstName" class="" type="text" data-bind="value: FirstName"/></td>
+                        <td><input id="LastName" class="" type="text" data-bind="value: LastName"/></td>
+                        <td><button data-bind="click: $parent.removeAuthor">Remove</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <span id="AuthorErrors" class="validationMessage" data-bind="visible: Authors().length < 1">Please add one or more authors!</span>
+
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default"/>
+                        <input type="submit" value="Save" class="btn btn-default"/> @*data-bind="enable: Authors().length >= 1"*@
                     </div>
                 </div>
-
-            </div>
+        </div>
         }
     </div>
 </div>
@@ -86,57 +104,94 @@
 @section scripts
 {
     <script>
-        $(document).on('change', ':file', function () {
-            var input = $(this),
-                numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-            input.trigger('fileselect', [numFiles, label]);
-        });
-
-        (function () {
-            var BookViewModel = function (data) {
-                var model = ko.validatedObservable({
-                    Id: ko.observable(data && data.Id),
-                    Header: ko.observable(data && data.Header).extend({ required: true, max: 30 }),
-                    NumberOfPages: ko.observable(data && data.NumberOfPages).extend({ required: true, min: 0, max: 10000 }),
-                    PublishingHouse: ko.observable(data && data.PublishingHouse).extend({ max: 30 }),
-                    PublishingYear: ko.observable(data && data.PublishingYear).extend({ required: true, min: 1800 }),
-                    ISBN: ko.observable(data && data.ISBN).extend({ required: true }),
-                    Image: ko.observable(data && data.Image),
-
-                    saveBook: function () {
-                        if (model.errors().length === 0) {
-                            $.ajax({
-                                url: "api/Book/Edit",
-                                type: "POST",
-                                data: ko.toJSON(model),
-                                contentType: "application/json; charset=utf-8",
-                                async: false,
-                                success: function (result) {
-                                    //if (result.url) {
-                                    //    location.href = result.url;
-                                    //}
-                                }
-                            });
-                        }
-                        else {
-                            model.errors.showAllMessages();
-                        }
-                    }
+        $(document)
+            .on('change',
+                ':file',
+                function() {
+                    var input = $(this),
+                        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                    input.trigger('fileselect', [numFiles, label]);
                 });
 
-                model.errors = ko.validation.group(model);
+        (function() {
+            var AuthorViewModel = function(data) {
+                var self = this;
 
-                return model;
+                self.Id = ko.observable(data && data.Id);
+                self.FirstName = ko.observable(data && data.FirstName).extend({ required: true, maxLength: 20 });
+                self.LastName = ko.observable(data && data.LastName).extend({ required: true, maxLength: 20 });
+
+                self.errors = ko.validation.group(self);
+
+                return self;
             }
 
-            var MSViewModel = function () {
+            var BookViewModel = function (data) {
+                var bla = function() {
+
+                    var mappedBooks;
+                    if (data) {
+                        mappedBooks = $.map(data.Authors, function(item) { return new AuthorViewModel(item); });
+                    }
+
+                    return ko.observableArray(mappedBooks || []);
+                }
+
+                var self = this;
+                self.Id = ko.observable(data && data.Id);
+                self.Header = ko.observable(data && data.Header).extend({ required: true, maxLength: 30 });
+                self.NumberOfPages = ko.observable(data && data.NumberOfPages).extend({ required: true, min: 0, max: 10000 });
+                self.PublishingHouse = ko.observable(data && data.PublishingHouse).extend({ maxLength: 30 });
+                self.PublishingYear = ko.observable(data && data.PublishingYear).extend({ required: true, min: 1800 });
+                self.ISBN = ko.observable(data && data.ISBN).extend({ required: true });
+                self.Image = ko.observable(data && data.Image);
+
+                self.Authors = bla().extend({ minLength: 1 }),
+
+                self.addAuthor = function () {
+                    self.Authors.push(new AuthorViewModel());
+                }
+
+                self.removeAuthor = function (author) {
+                    self.Authors.remove(author);
+                },
+
+                self.saveBook = function () {
+                    if (self.errors().length === 0) {
+                        console.log('save');
+                        $.ajax({
+                            url: "api/Book/Edit",
+                            type: "POST",
+                            data: ko.toJSON(self),
+                            contentType: "application/json; charset=utf-8",
+                            async: false,
+                            success: function(result) {
+                                //if (result.url) {
+                                //    location.href = result.url;
+                                //}
+                            }
+                        });
+                    } else {
+                        console.log('no');
+                        self.errors.showAllMessages();
+                    }
+                };
+
+                self.errors = ko.validation.group(self, { deep: true, live: true });
+                self.errors = ko.validation.group(self.Authors, { deep: true, live: true });
+
+                return self;
+            }
+
+            var MSViewModel = function() {
                 var self = this;
 
                 self.books = ko.observableArray([]);
+
                 self.selectedBook = ko.observable();
 
-                self.EditForm = function (book) { self.selectedBook(book); };
+                self.EditForm = function(book) { self.selectedBook(book); };
 
                 BookViewModel.errors = ko.validation.group(BookViewModel);
 
@@ -153,18 +208,20 @@
                     }
                 };
 
-                self.loadBooks = function () {
+                self.loadBooks = function() {
                     $.ajax({
-                        url: "api/Book/GetAll",
-                        type: "GET"
-                    }).done(function (data) {
-                        var mappedBooks = $.map(data, function (item) { return new BookViewModel(item); });
-                        
-                        mappedBooks.push(new BookViewModel());
-                        self.books(mappedBooks);
-                    }).error(function (err) {
-                        //self.ErrorMessage("Error!!!!" + err.status);
-                    });
+                            url: "api/Book/GetAll",
+                            type: "GET"
+                        })
+                        .done(function(data) {
+                            var mappedBooks = $.map(data, function(item) { return new BookViewModel(item); });
+
+                            mappedBooks.push(new BookViewModel());
+                            self.books(mappedBooks);
+                        })
+                        .error(function(err) {
+                            //self.ErrorMessage("Error!!!!" + err.status);
+                        });
                 };
 
                 //$.getJSON("/tasks", function (allData) {
@@ -172,7 +229,7 @@
                 //    self.tasks(mappedTasks);
                 //});
 
-                self.loadBooks();                
+                self.loadBooks();
             };
 
             ko.applyBindings(new MSViewModel());

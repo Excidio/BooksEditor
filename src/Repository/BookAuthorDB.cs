@@ -33,7 +33,6 @@ namespace BooksEditor.Repository
 
         public static void Remove(BookAuthor value)
         {
-            //Values.First(b => b.AuthorId == value.BookId);
             Values.Remove(value);
         }
     }

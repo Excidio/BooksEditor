@@ -1,4 +1,5 @@
-﻿using BooksEditor.Domain;
+﻿using System.Linq;
+using BooksEditor.Domain;
 using BooksEditor.Repository.Interfaces;
 
 namespace BooksEditor.Repository.Implementation
@@ -22,12 +23,12 @@ namespace BooksEditor.Repository.Implementation
 
         public Author FindOne(int id)
         {
-            throw new System.NotImplementedException();
+            return AuthorDB.GetAll().FirstOrDefault(a => a.Id == id);
         }
 
         public Author FindOne(string firstName, string lastName)
         {
-            throw new System.NotImplementedException();
+            return AuthorDB.GetAll().FirstOrDefault(a => a.FirstName == firstName && a.LastName == lastName);
         }
     }
 }

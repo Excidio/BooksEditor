@@ -33,6 +33,18 @@ namespace BooksEditor.Services.Implementation
             _authorRepository.Save(author);
         }
 
+        public void SaveOrAdd(Author author)
+        {
+            if (author.Id == 0)
+            {
+                Add(author);
+            }
+            else
+            {
+                Save(author);
+            }
+        }
+
         public void Remove(Author author)
         {
             ValidateAuthor(author.Id);

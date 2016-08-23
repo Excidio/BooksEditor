@@ -17,6 +17,7 @@ namespace BooksEditor.Repository.Implementation
         public void Save(Book book)
         {
             BookDB.Save(book);
+            BookAuthorRepository.UpdateAuthors(book);
         }
 
         public IEnumerable<Book> FindAll()

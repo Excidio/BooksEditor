@@ -8,6 +8,8 @@ namespace BooksEditor.Services.Interfaces
 
         void Save(Author author);
 
+        void SaveOrAdd(Author author);
+
         void Remove(Author author);
     }
 }
