@@ -2,14 +2,20 @@
     ViewBag.Title = "BookEditor";
 }
 <div class="container-fluid">
+    <b>Sorts:</b>
+    Field:<br />
+    <select data-bind="options: sorter.sortOptions, optionsText: 'Name', value: sorter.currentSortOption"></select>
+    Direction:
+    <select data-bind="options: sorter.sortDirections, optionsText: 'Name', value: sorter.currentSortDirection"></select>
     <div id="BookMasterList" class="col-xs-6 col-md-4">
-        <div data-bind="foreach: books">
+        <div data-bind="foreach: sorter.orderedRecords">
             <div class="well">
                 <div class="form-group text-center">
                     <img data-bind="attr: {src: Image}" alt="Image" width="200" height="260"/>
                 </div>
-                <div class="form-group">
+                <div class="form-group text-center">
                     <h3 class="text-overflow-ellipsis" data-bind="text: Header"></h3>
+                    <span data-bind="text: PublishingYear"></span>
                 </div>
                 <ul>
                     <li data-bind="click: $parent.EditForm">Edit Details</li>
@@ -19,11 +25,11 @@
     </div>
 
     <div class="col-xs-12 col-md-8" data-bind="with: selectedBook">
-        @using (Html.BeginForm("Save", "Book", FormMethod.Post, new { enctype = "multipart/form-data", data_bind = "submit: saveBook" }))
+        @using (Html.BeginForm("Save", "Book", FormMethod.Post, new {enctype = "multipart/form-data", data_bind = "submit: saveBook"}))
         {
             @Html.AntiForgeryToken()
-        <h4>Edit details</h4>
-        <hr/>
+            <h4>Edit details</h4>
+            <hr/>
 
             <div class="container">
                 <div class="form-group">
@@ -96,7 +102,7 @@
                         <input type="submit" value="Save" class="btn btn-default"/> @*data-bind="enable: Authors().length >= 1"*@
                     </div>
                 </div>
-        </div>
+            </div>
         }
     </div>
 </div>
@@ -114,7 +120,88 @@
                     input.trigger('fileselect', [numFiles, label]);
                 });
 
-        (function() {
+        function Sorter(sortOptions, records) {
+            var self = this;
+
+            self.records = records;
+
+            self.sortOptions = ko.observableArray(sortOptions);
+            self.sortDirections = ko.observableArray([
+                {
+                    Name: "Asc",
+                    Value: "Asc",
+                    Sort: false
+                },
+                {
+                    Name: "Desc",
+                    Value: "Desc",
+                    Sort: true
+                }]);
+
+            self.currentSortOption = ko.observable(GetSortValueFromCookie(self.sortOptions(), "SortOption"));
+            self.currentSortDirection = ko.observable(GetSortValueFromCookie(self.sortDirections(), "SortDirection"));
+
+            self.orderedRecords = ko.computed(function () {
+                var recordsValues = self.records();
+                var sortOption = self.currentSortOption();
+                var sortDirection = self.currentSortDirection();
+
+                if (sortOption == null || sortDirection == null) {
+                    return recordsValues;
+                }
+
+                var sortedRecords = recordsValues.slice(0, recordsValues.length);
+                SortArray(sortedRecords, sortDirection.Sort, sortOption.Sort);
+
+                return sortedRecords;
+            }).extend({ throttle: 5 });
+
+            function SortArray(array, direction, comparison) {
+                if (array == null) {
+                    return [];
+                }
+
+                for (var oIndex = 0; oIndex < array.length; oIndex++) {
+                    var oItem = array[oIndex];
+                    for (var iIndex = oIndex + 1; iIndex < array.length; iIndex++) {
+                        var iItem = array[iIndex];
+                        var isOrdered = comparison(oItem, iItem);
+                        if (isOrdered === direction) {
+                            array[iIndex] = oItem;
+                            array[oIndex] = iItem;
+                            oItem = iItem;
+                        }
+                    }
+                }
+
+                return array;
+            }
+
+            function GetSortValueFromCookie(options, cookieName) {
+                var result;
+                var cookieValue = $.cookie(cookieName);
+                if (cookieValue) {
+                    options.forEach(function (e) {
+                        if (e.Value === cookieValue) {
+                            result = e;
+                        }
+                    });
+                }
+
+                return result || options[0];
+            }
+
+            self.currentSortOption.subscribe(function (val) {
+                $.cookie("SortOption", val.Value, { expires: 10 });
+            }, self);
+
+            self.currentSortDirection.subscribe(function (val) {
+                $.cookie("SortDirection", val.Value, { expires: 10 });
+            }, self);
+
+        };
+
+        ; (function () {
             var AuthorViewModel = function(data) {
                 var self = this;
 
@@ -184,10 +271,36 @@
                 return self;
             }
 
+            function CompareCaseInsensitive(left, right) {
+                if (left == null) {
+                    return right == null;
+                }
+                else if (right == null) {
+                    return false;
+                }
+
+                return left.toUpperCase() <= right.toUpperCase();
+            }
+
             var MSViewModel = function() {
                 var self = this;
-
+                
                 self.books = ko.observableArray([]);
+
+                var sortOptions = [
+                    {
+                        Name: "Header",
+                        Value: "Header",
+                        Sort: function (left, right) { return CompareCaseInsensitive(left.Header(), right.Header()); }
+                    },
+                    {
+                        Name: "Publishing year",
+                        Value: "PublishingYear",
+                        Sort: function (left, right) { return left.PublishingYear() < right.PublishingYear(); }
+                    }
+                ];
+
+                self.sorter = new Sorter(sortOptions, self.books);
 
                 self.selectedBook = ko.observable();
 
@@ -216,7 +329,7 @@
                         .done(function(data) {
                             var mappedBooks = $.map(data, function(item) { return new BookViewModel(item); });
 
-                            mappedBooks.push(new BookViewModel());
+                            //mappedBooks.push(new BookViewModel());
                             self.books(mappedBooks);
                         })
                         .error(function(err) {
