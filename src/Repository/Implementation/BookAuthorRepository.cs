@@ -21,6 +21,15 @@ namespace BooksEditor.Repository.Implementation
             Add(book, bookAuthors);
         }
 
+        public void RemoveAuthors(Book book)
+        {
+            var bookAuthors = BookAuthorDB.GetAll().Where(ba => ba.BookId == book.Id).ToArray();
+            foreach (var bookAuthor in bookAuthors)
+            {
+                BookAuthorDB.Remove(bookAuthor);
+            }
+        }
+
         private static void Add(Book book, IEnumerable<BookAuthor> bookAuthors)
         {
             foreach (var author in book.Authors.Where(a => bookAuthors.All(ba => ba.AuthorId != a.Id)).ToList())

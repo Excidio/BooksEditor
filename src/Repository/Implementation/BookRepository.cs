@@ -12,6 +12,7 @@ namespace BooksEditor.Repository.Implementation
         public void Add(Book book)
         {
             BookDB.Add(book);
+            BookAuthorRepository.UpdateAuthors(book);
         }
 
         public void Save(Book book)
@@ -36,9 +37,12 @@ namespace BooksEditor.Repository.Implementation
             return books;
         }
 
-        public void Remove(Book book)
+        public void Remove(int id)
         {
+            var book = BookDB.GetAll().First(b => b.Id == id);
+
             BookDB.Remove(book);
+            BookAuthorRepository.RemoveAuthors(book);
         }
     }
 }

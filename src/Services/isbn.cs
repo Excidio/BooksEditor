@@ -1,6 +1,6 @@
 ﻿namespace BooksEditor.Services
 {
-    public static class Isbn
+    internal static class Isbn
     {
         // ********************************************************************
         // * ISBN Reference:                                                  *

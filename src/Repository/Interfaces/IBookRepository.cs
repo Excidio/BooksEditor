@@ -13,6 +13,6 @@ namespace BooksEditor.Repository.Interfaces
 
         IEnumerable<Book> FindAllWithRelated();
 
-        void Remove(Book book);
+        void Remove(int id);
     }
 }

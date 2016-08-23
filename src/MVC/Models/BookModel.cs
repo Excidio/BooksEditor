@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using BooksEditor.MVC.Attributes;
 
 namespace BooksEditor.MVC.Models
 {
@@ -19,7 +20,7 @@ namespace BooksEditor.MVC.Models
         [MaxLength(30, ErrorMessage = "The {0} must be maximum {1} characters long.")]
         public string PublishingHouse { get; set; }
 
-        [Range(1800, 2020, ErrorMessage = "The {0} must be between {1} and {2}.")]
+        [MinValue(1800, ErrorMessage = "The {0} must be more then {1}.")]
         public int PublishingYear { get; set; }
 
         [Required]
