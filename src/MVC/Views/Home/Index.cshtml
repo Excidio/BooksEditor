@@ -2,13 +2,23 @@
     ViewBag.Title = "BookEditor";
 }
 <div class="container-fluid">
-    <b>Sorts:</b>
-    Field:<br />
-    <select data-bind="options: sorter.sortOptions, optionsText: 'Name', value: sorter.currentSortOption"></select>
-    Direction:
-    <select data-bind="options: sorter.sortDirections, optionsText: 'Name', value: sorter.currentSortDirection"></select>
-    <button data-bind="click: AddBook">Add book</button>
     <div id="BookMasterList" class="col-xs-6 col-md-4">
+        <div class="well">
+            <div class="form-group">
+                <b>Sort by:</b>
+                <div>
+                    <span>Field:</span>
+                    <select class="form-control" data-bind="options: sorter.sortOptions, optionsText: 'Name', value: sorter.currentSortOption"></select>
+                </div>
+                <div>
+                    <span>Direction:</span>
+                    <select class="form-control" data-bind="options: sorter.sortDirections, optionsText: 'Name', value: sorter.currentSortDirection"></select>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <button class="btn btn-primary full-width" data-bind="click: AddBook">Add book</button>
+            </div>
+        </div>
         <div data-bind="foreach: sorter.orderedRecords">
             <div class="well">
                 <div class="form-group text-center">
@@ -27,7 +37,7 @@
     </div>
 
     <div class="col-xs-12 col-md-8" data-bind="with: selectedBook">
-        @using (Html.BeginForm("Save", "Book", FormMethod.Post, new {enctype = "multipart/form-data", data_bind = "submit: saveBook"}))
+        @using (Html.BeginForm("Save", "api/Book", FormMethod.Post, new {enctype = "multipart/form-data", data_bind = "submit: saveBook"}))
         {
             @Html.AntiForgeryToken()
             <h4>Edit details</h4>
@@ -35,73 +45,72 @@
 
             <div class="container">
                 <div class="form-group">
-                    <img id="Image" data-bind="attr: {src: Image}" alt="Image"/>
                     <div class="input-group">
-                        <label class="input-group-btn">
-                            <span class="btn btn-primary">
-                                Browse… <input data-bind="event: {change: $parent.imageUpload}" type="file" accept="image/*" style="display: none;"/>
-                            </span>
-                        </label>
-                        <input type="text" class="form-control" readonly="">
+                        <img id="Image" data-bind="attr: {src: Image}" alt="Image"/>
+                        <div>
+                            <label class="btn btn-primary">
+                                Browse&hellip; <input type="file" accept="image/*" data-bind="event: {change: $parent.imageUpload}" style="display: none;">
+                            </label>
+                        </div>
                     </div>
-                    @*<br/>
-                    <span class="btn btn-default btn-file">
-                        Browse <input data-bind="event: {change: $parent.imageUpload}" type="file" accept="image/*" />
-                    </span>*@
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <label class="control-label col-md-2" for="Header">Header:</label>
                     <div class="col-md-10">
                         <input id="Header" class="form-control" type="text" data-bind="value: Header"/>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <label class="control-label col-md-2" for="NumberOfPages">Number of pages:</label>
                     <div class="col-md-10">
                         <input id="NumberOfPages" class="form-control" type="number" data-bind="value: NumberOfPages"/>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <label class="control-label col-md-2" for="PublishingHouse">Publishing house:</label>
                     <div class="col-md-10">
                         <input id="PublishingHouse" class="form-control" type="text" data-bind="value: PublishingHouse"/>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <label class="control-label col-md-2" for="PublishingYear">Publishing year:</label>
                     <div class="col-md-10">
                         <input id="PublishingYear" class="form-control" type="number" data-bind="value: PublishingYear"/>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <label class="control-label col-md-2" for="ISBN">ISBN:</label>
                     <div class="col-md-10">
                         <input id="ISBN" class="form-control" type="text" data-bind="value: ISBN"/>
                     </div>
                 </div>
 
-                <button data-bind="click: addAuthor">Add author</button>
-                <table id="Authors" data-bind="visible: Authors().length >= 1">
-                    <thead>
-                    <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody data-bind="foreach: Authors">
-                    <tr>
-                        <td><input id="FirstName" class="" type="text" data-bind="value: FirstName"/></td>
-                        <td><input id="LastName" class="" type="text" data-bind="value: LastName"/></td>
-                        <td><button data-bind="click: $parent.removeAuthor">Remove</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <span id="AuthorErrors" class="validationMessage" data-bind="visible: Authors().length < 1">Please add one or more authors!</span>
+                <div class="form-group col-xs-12 col-md-7 well">
+                    <button class="btn btn-success" data-bind="click: addAuthor">Add author</button>
+                        <div class="table-responsive">
+                            <table id="Authors" class="table" data-bind="visible: Authors().length >= 1">
+                                <thead>
+                                <tr>
+                                    <th>First name</th>
+                                    <th>Last name</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody data-bind="foreach: Authors">
+                                <tr>
+                                    <td><input id="FirstName" class="form-control" type="text" data-bind="value: FirstName"/></td>
+                                    <td><input id="LastName" class="form-control" type="text" data-bind="value: LastName"/></td>
+                                    <td><button class="btn btn-danger" data-bind="click: $parent.removeAuthor">Remove</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                    </div>
+                    <span id="AuthorErrors" class="validationMessage" data-bind="visible: Authors().length < 1">Please add one or more authors!</span>
+                </div>
 
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default"/> @*data-bind="enable: Authors().length >= 1"*@
+                    <div class="col-md-offset-6 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-primary" data-bind="enable: errors().length === 0" />
                     </div>
                 </div>
 
@@ -116,305 +125,31 @@
 @section scripts
 {
     <script>
-        $(document)
-            .on('change',
-                ':file',
-                function() {
-                    var input = $(this),
-                        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                    input.trigger('fileselect', [numFiles, label]);
-                });
+        $(document).ready(function () {
+            $('input[name=file]').change(function () {
+                alert($(this).val());
+            });
+            //$("input:file").change(function () {
+            //    alert(1);
+            //    var fileName = $(this).val();
+            //    $(".filename").html(fileName);
+            //});
+            //$("input:file").change("fileselect", function (event, numFiles, label) {
+            //    alert(1);
+            //    var input = $(this).parents(".input-group").find(":text"),
+            //        log = numFiles > 1 ? numFiles + " files selected" : label;
 
-        function Sorter(sortOptions, records) {
-            var self = this;
+            //    if (input.length) {
+            //        input.val(log);
+            //    } else {
+            //        if (log) alert(log);
+            //    }
 
-            self.records = records;
+            //});
+        });
 
-            self.sortOptions = ko.observableArray(sortOptions);
-            self.sortDirections = ko.observableArray([
-                {
-                    Name: "Asc",
-                    Value: "Asc",
-                    Sort: false
-                },
-                {
-                    Name: "Desc",
-                    Value: "Desc",
-                    Sort: true
-                }
-            ]);
-
-            self.currentSortOption = ko.observable(GetSortValueFromCookie(self.sortOptions(), "SortOption"));
-            self.currentSortDirection = ko.observable(GetSortValueFromCookie(self.sortDirections(), "SortDirection"));
-
-            self.orderedRecords = ko.computed(function() {
-                    var recordsValues = self.records();
-                    var sortOption = self.currentSortOption();
-                    var sortDirection = self.currentSortDirection();
-
-                    if (sortOption == null || sortDirection == null) {
-                        return recordsValues;
-                    }
-
-                    var sortedRecords = recordsValues.slice(0, recordsValues.length);
-                    SortArray(sortedRecords, sortDirection.Sort, sortOption.Sort);
-
-                    return sortedRecords;
-                })
-                .extend({ throttle: 5 });
-
-            function SortArray(array, direction, comparison) {
-                if (array == null) {
-                    return [];
-                }
-
-                for (var oIndex = 0; oIndex < array.length; oIndex++) {
-                    var oItem = array[oIndex];
-                    for (var iIndex = oIndex + 1; iIndex < array.length; iIndex++) {
-                        var iItem = array[iIndex];
-                        var isOrdered = comparison(oItem, iItem);
-                        if (isOrdered === direction) {
-                            array[iIndex] = oItem;
-                            array[oIndex] = iItem;
-                            oItem = iItem;
-                        }
-                    }
-                }
-
-                return array;
-            }
-
-            function GetSortValueFromCookie(options, cookieName) {
-                var result;
-                var cookieValue = $.cookie(cookieName);
-                if (cookieValue) {
-                    options.forEach(function(e) {
-                        if (e.Value === cookieValue) {
-                            result = e;
-                        }
-                    });
-                }
-
-                return result || options[0];
-            }
-
-            self.currentSortOption.subscribe(function(val) {
-                    $.cookie("SortOption", val.Value, { expires: 10 });
-                },
-                self);
-
-            self.currentSortDirection.subscribe(function(val) {
-                    $.cookie("SortDirection", val.Value, { expires: 10 });
-                },
-                self);
-
-        };
-
-        ko.observable.fn.appendError = function(error) {
-            var thisError = this.error();
-            if (thisError) {
-                this.setError(thisError += '. ' + error);
-            } else {
-                this.setError(error);
-            };
-        };;
         (function() {
-            var AuthorViewModel = function(data) {
-                var self = this;
-
-                self.Id = ko.observable(data && data.Id);
-                self.FirstName = ko.observable(data && data.FirstName).extend({ required: true, maxLength: 20 });
-                self.LastName = ko.observable(data && data.LastName).extend({ required: true, maxLength: 20 });
-
-                self.errors = ko.validation.group(self);
-
-                return self;
-            }
-
-            var BookViewModel = function(data) {
-                var GetAuthors = function() {
-
-                    var mappedBooks;
-                    if (data) {
-                        mappedBooks = $.map(data.Authors, function(item) { return new AuthorViewModel(item); });
-                    }
-
-                    return ko.observableArray(mappedBooks || []);
-                }
-
-                var self = this;
-                self.Id = ko.observable(data && data.Id);
-                self.Header = ko.observable(data && data.Header).extend({ required: true, maxLength: 30 });
-                self.NumberOfPages = ko.observable(data && data.NumberOfPages).extend({ required: true, min: 0, max: 10000 });
-                self.PublishingHouse = ko.observable(data && data.PublishingHouse).extend({ maxLength: 30 });
-                self.PublishingYear = ko.observable(data && data.PublishingYear).extend({ required: true, min: 0 });
-                self.ISBN = ko.observable(data && data.ISBN).extend({ required: true });
-                self.Image = ko.observable(data && data.Image);
-
-                self.Authors = GetAuthors().extend({ minLength: 1 }),
-                    self.addAuthor = function() {
-                        self.Authors.push(new AuthorViewModel());
-                    }
-
-                self.removeAuthor = function(author) {
-                        self.Authors.remove(author);
-                    },
-                    self.saveBook = function() {
-                        if (self.errors().length === 0) {
-                            self.generalErrors.removeAll();
-                            $.ajax({
-                                url: "api/Book/Post",
-                                type: "POST",
-                                data: ko.toJSON(self),
-                                contentType: "application/json; charset=utf-8",
-                                success: function(result) {
-                                    self.Id = result.Id;
-                                },
-                                statusCode: {
-                                    400: function(result) {
-                                        if (typeof result.responseJSON.ModelState !== "undefined") {
-                                            $.each(result.responseJSON.ModelState,
-                                                function(key, errors) {
-                                                    $.each(errors,
-                                                        function(index, error) {
-                                                            switch (key) {
-                                                            case "model.Header":
-                                                                self.Header.appendError(error);
-                                                                break;
-                                                            case "model.NumberOfPages":
-                                                                self.NumberOfPages.appendError(error);
-                                                                break;
-                                                            case "model.PublishingHouse":
-                                                                self.PublishingHouse.appendError(error);
-                                                                break;
-                                                            case "model.PublishingYear":
-                                                                self.PublishingYear.appendError(error);
-                                                                break;
-                                                            //case "model.ISBN":
-                                                            //    self.ISBN.appendError(error);
-                                                            //    break;
-                                                            default:
-                                                                self.generalErrors.push(error);
-                                                                break;
-                                                            };
-                                                        });
-                                                });
-                                        } else {
-                                            self.generalErrors.push(result.responseJSON.Message);
-                                        };
-                                    },
-                                    500: function (result) {
-                                        self.generalErrors.push(result.statusText + '. Please contact with developers.');
-                                    }
-                                }
-                            });
-                        } else {
-                            self.errors.showAllMessages();
-                        }
-                    };
-
-                self.errors = ko.validation.group(self, { deep: true, live: true });
-                self.generalErrors = ko.observableArray([]);
-
-                return self;
-            }
-
-            function CompareCaseInsensitive(left, right) {
-                if (left == null) {
-                    return right == null;
-                } else if (right == null) {
-                    return false;
-                }
-
-                return left.toUpperCase() <= right.toUpperCase();
-            }
-
-            var MSViewModel = function() {
-                var self = this;
-
-                self.books = ko.observableArray([]);
-
-                var sortOptions = [
-                    {
-                        Name: "Header",
-                        Value: "Header",
-                        Sort: function(left, right) { return CompareCaseInsensitive(left.Header(), right.Header()); }
-                    },
-                    {
-                        Name: "Publishing year",
-                        Value: "PublishingYear",
-                        Sort: function(left, right) { return left.PublishingYear() < right.PublishingYear(); }
-                    }
-                ];
-
-                self.sorter = new Sorter(sortOptions, self.books);
-
-                self.selectedBook = ko.observable();
-
-                self.AddBook = function() {
-                    var book = new BookViewModel();
-                    self.books.push(book);
-                    self.selectedBook(book);
-                };
-
-                self.EditForm = function(book) { self.selectedBook(book); };
-
-                self.RemoveBook = function(book) {
-                    var header = book.Header();
-                    if (confirm("Are you sure you want to remove book: " + header + "?")) {
-                        $.ajax({
-                            url: "api/Book/Remove?Id=" + book.Id(),
-                            type: "DELETE",
-                            success: function() {
-                                alert("Book: " + header + " has been removed.");
-                                self.books.remove(book);
-                                self.selectedBook(null);
-                            }
-                        });
-                    }
-                };
-
-                BookViewModel.errors = ko.validation.group(BookViewModel);
-
-                self.imageUpload = function(data, e) {
-                    var file = e.target.files[0];
-                    var reader = new FileReader();
-
-                    reader.onloadend = function() {
-                        data.Image(reader.result);
-                    };
-
-                    if (file) {
-                        reader.readAsDataURL(file);
-                    }
-                };
-
-                self.loadBooks = function() {
-                    $.ajax({
-                            url: "api/Book/GetAll",
-                            type: "GET"
-                        })
-                        .done(function(data) {
-                            var mappedBooks = $.map(data, function(item) { return new BookViewModel(item); });
-
-                            //mappedBooks.push(new BookViewModel());
-                            self.books(mappedBooks);
-                        })
-                        .error(function(err) {
-                            //self.ErrorMessage("Error!!!!" + err.status);
-                        });
-                };
-
-                //$.getJSON("/tasks", function (allData) {
-                //    var mappedTasks = $.map(allData, function (item) { return new Task(item) });
-                //    self.tasks(mappedTasks);
-                //});
-
-                self.loadBooks();
-            };
-
-            ko.applyBindings(new MSViewModel());
+            ko.applyBindings(new MainViewModel());
         })();
     </script>
 }
@@ -430,6 +165,7 @@
         position: relative;
         overflow: hidden;
     }
+
     .btn-file input[type=file] {
         position: absolute;
         top: 0;
@@ -445,8 +181,13 @@
         cursor: inherit;
         display: block;
     }
+
     .validationMessage {
         color: #b20000;
+    }
+
+    .full-width {
+        width: 100%;
     }
 </style>
 

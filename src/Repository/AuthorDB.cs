@@ -47,13 +47,5 @@ namespace BooksEditor.Repository
         {
             return Values;
         }
-
-        public static void Remove(Author author)
-        {
-            lock (SyncObject)
-            {
-                Values.Remove(author);
-            }
-        }
     }
 }

@@ -5,9 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using BooksEditor.Domain;
 using BooksEditor.MVC.Models;
-using BooksEditor.Repository.Interfaces;
 using BooksEditor.Services.Interfaces;
-using Newtonsoft.Json;
 
 namespace BooksEditor.MVC.Controllers
 {

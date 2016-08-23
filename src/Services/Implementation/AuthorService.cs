@@ -14,25 +14,6 @@ namespace BooksEditor.Services.Implementation
             _authorRepository = authorRepository;
         }
 
-        public void Add(Author author)
-        {
-            var authorDB = _authorRepository.FindOne(author.FirstName, author.LastName);
-            if (authorDB == null)
-            {
-                _authorRepository.Add(author);
-            }
-            else
-            {
-                author.Id = authorDB.Id;
-            }
-        }
-
-        public void Save(Author author)
-        {
-            ValidateAuthor(author.Id);
-            _authorRepository.Save(author);
-        }
-
         public void SaveOrAdd(Author author)
         {
             if (author.Id == 0)
@@ -45,10 +26,23 @@ namespace BooksEditor.Services.Implementation
             }
         }
 
-        public void Remove(Author author)
+        private void Add(Author author)
+        {
+            var authorDB = _authorRepository.FindOne(author.FirstName, author.LastName);
+            if (authorDB == null)
+            {
+                _authorRepository.Add(author);
+            }
+            else
+            {
+                author.Id = authorDB.Id;
+            }
+        }
+
+        private void Save(Author author)
         {
             ValidateAuthor(author.Id);
-            _authorRepository.Remove(author);
+            _authorRepository.Save(author);
         }
 
         private void ValidateAuthor(int id)

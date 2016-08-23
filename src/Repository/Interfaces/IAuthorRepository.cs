@@ -8,8 +8,6 @@ namespace BooksEditor.Repository.Interfaces
 
         void Save(Author author);
 
-        void Remove(Author author);
-
         Author FindOne(int id);
 
         Author FindOne(string firstName, string lastName);

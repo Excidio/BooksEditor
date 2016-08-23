@@ -21,11 +21,6 @@ namespace BooksEditor.Repository.Implementation
             BookAuthorRepository.UpdateAuthors(book);
         }
 
-        public IEnumerable<Book> FindAll()
-        {
-            return BookDB.GetAll();
-        }
-
         public IEnumerable<Book> FindAllWithRelated()
         {
             var books = BookDB.GetAll().ToList();

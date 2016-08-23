@@ -9,8 +9,6 @@ namespace BooksEditor.Repository.Interfaces
 
         void Save(Book book);
 
-        IEnumerable<Book> FindAll();
-
         IEnumerable<Book> FindAllWithRelated();
 
         void Remove(int id);

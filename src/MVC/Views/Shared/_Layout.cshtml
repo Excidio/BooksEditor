@@ -6,7 +6,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/libs/modernizr-2.6.2.js"></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -34,11 +34,15 @@
         </footer>
     </div>
 
-    <script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/knockout-3.4.0.js"></script>
-    <script type="text/javascript" src="~/Scripts/knockout.validation.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="~/Scripts/libs/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/libs/knockout-3.4.0.js"></script>
+    <script type="text/javascript" src="~/Scripts/libs/knockout.validation/knockout.validation.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/libs/jquery.cookie.js"></script>
+    <script type="text/javascript" src="~/Scripts/app.js"></script>
+    <script type="text/javascript" src="~/Scripts/KnockoutSorter.js"></script>
+    <script type="text/javascript" src="~/Scripts/AuthorViewModel.js"></script>
+    <script type="text/javascript" src="~/Scripts/BookViewModel.js"></script>
+    <script type="text/javascript" src="~/Scripts/MainViewModel.js"></script>
     @RenderSection("scripts", false)
 </body>
 </html>

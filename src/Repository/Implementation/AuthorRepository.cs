@@ -16,11 +16,6 @@ namespace BooksEditor.Repository.Implementation
             AuthorDB.Save(author);
         }
 
-        public void Remove(Author author)
-        {
-            AuthorDB.Remove(author);
-        }
-
         public Author FindOne(int id)
         {
             return AuthorDB.GetAll().FirstOrDefault(a => a.Id == id);
