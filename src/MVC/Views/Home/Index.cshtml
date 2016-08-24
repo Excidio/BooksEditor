@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "BookEditor";
 }
+
 <div class="container-fluid">
     <div id="BookMasterList" class="col-xs-6 col-md-4">
         <div class="well">
@@ -37,7 +38,7 @@
     </div>
 
     <div class="col-xs-12 col-md-8" data-bind="with: SelectedBook">
-        @using (Html.BeginForm("Save", "api/Book", FormMethod.Post, new {enctype = "multipart/form-data", data_bind = "submit: $parent.SaveBook"}))
+        @using (Html.BeginForm("Post", "api/Book", FormMethod.Post, new {enctype = "multipart/form-data", data_bind = "submit: $parent.SaveBook"}))
         {
             @Html.AntiForgeryToken()
             <h4>Edit details</h4>
@@ -128,46 +129,14 @@
 @section scripts
 {
     <script>
+        var urlData = {
+            getUrl: "@Url.Action("GetAll", "api/Book")",
+            saveUrl: "@Url.Action("Post", "api/Book")",
+            removeUrl: "@Url.Action("Delete", "api/Book")"
+        };
+
         (function() {
-            ko.applyBindings(new MainViewModel());
+            ko.applyBindings(new MainViewModel(urlData));
         })();
     </script>
 }
-
-<style type="text/css">
-    .text-overflow-ellipsis {
-        -moz-text-overflow: ellipsis;
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-
-    .btn-file {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-file input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        background: white;
-        cursor: inherit;
-        display: block;
-    }
-
-    .validationMessage {
-        color: #b20000;
-    }
-
-    .full-width {
-        width: 100%;
-    }
-</style>
-

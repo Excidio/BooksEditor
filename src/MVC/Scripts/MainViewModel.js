@@ -1,4 +1,5 @@
-﻿var MainViewModel = function () {
+﻿var MainViewModel = function (urlData) {
+    console.log(urlData);
     var self = this;
 
     self.Books = ko.observableArray([]);
@@ -33,7 +34,7 @@
         if (book.Errors().length === 0) {
             book.GeneralErrors.removeAll();
             $.ajax({
-                url: "api/Book/Post",
+                url: urlData.saveUrl,
                 type: "POST",
                 data: ko.toJSON(book),
                 contentType: "application/json; charset=utf-8",
@@ -59,7 +60,7 @@
         var header = book.Header();
         if (confirm("Are you sure you want to remove book: " + header + "?")) {
             $.ajax({
-                url: "api/Book/Remove?Id=" + book.Id(),
+                url: urlData.removeUrl + "?Id=" + book.Id(),
                 type: "DELETE",
                 success: function () {
                     alert("Book: " + header + " has been removed.");
@@ -83,24 +84,7 @@
         }
     };
 
-    self.loadBooks = function () {
-        $.ajax({
-            url: "api/Book/GetAll",
-            type: "GET"
-        })
-            .done(function (data) {
-                var mappedBooks = $.map(data, function (item) { return new BookViewModel(item); });
-                self.Books(mappedBooks);
-            })
-            .error(function () {
-                alert("An error occurred when tried to load a books. Please contact with developers.");
-            });
-    };
-
-    //$.getJSON("/tasks", function (allData) {
-    //    var mappedTasks = $.map(allData, function (item) { return new Task(item) });
-    //    self.tasks(mappedTasks);
-    //});
-
-    self.loadBooks();
+    $.getJSON(urlData.getUrl, function (data) {
+        self.Books($.map(data, function (item) { return new BookViewModel(item); }));
+    });
 };

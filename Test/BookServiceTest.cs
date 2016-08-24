@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace BooksEditor.Test
 {
+    [TestFixture]
     public class BookServiceTest
     {
         private readonly IBookService _bookService;
