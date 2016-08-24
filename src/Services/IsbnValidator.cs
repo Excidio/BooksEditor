@@ -1,6 +1,6 @@
 ﻿namespace BooksEditor.Services
 {
-    internal static class Isbn
+    public static class IsbnValidator
     {
         // ********************************************************************
         // * ISBN Reference:                                                  *
@@ -63,14 +63,14 @@
                 // If the last character is 'X', then we should check if the checkdigit is equal to 10
                 if (lastChar == 'X')
                 {
-                    result = (remainder == 10);
+                    result = remainder == 10;
                 }
                 // Otherwise check if the lastChar is numeric
                 // Note: I'm passing sum to the TryParse method to not create a new variable again
                 else if (int.TryParse(lastChar.ToString(), out sum))
                 {
                     // lastChar is numeric, so let's compare it to remainder
-                    result = (remainder == int.Parse(lastChar.ToString()));
+                    result = remainder == int.Parse(lastChar.ToString());
                 }
             }
 
@@ -112,7 +112,7 @@
                 int checkDigit = 10 - remainder;
                 if (checkDigit == 10) checkDigit = 0;
 
-                result = (checkDigit == int.Parse(isbn13[12].ToString()));
+                result = checkDigit == int.Parse(isbn13[12].ToString());
             }
 
             return result;

@@ -1,10 +1,10 @@
 ﻿function KnockoutSorter(sortOptions, records) {
     var self = this;
 
-    self.records = records;
+    self.Records = records;
 
-    self.sortOptions = ko.observableArray(sortOptions);
-    self.sortDirections = ko.observableArray([
+    self.SortOptions = ko.observableArray(sortOptions);
+    self.SortDirections = ko.observableArray([
         {
             Name: "Asc",
             Value: "Asc",
@@ -17,21 +17,21 @@
         }
     ]);
 
-    self.currentSortOption = ko.observable(GetSortValueFromCookie(self.sortOptions(), "SortOption"));
-    self.currentSortDirection = ko.observable(GetSortValueFromCookie(self.sortDirections(), "SortDirection"));
+    self.CurrentSortOption = ko.observable(GetSortValueFromCookie(self.SortOptions(), "SortOption"));
+    self.CurrentSortDirection = ko.observable(GetSortValueFromCookie(self.SortDirections(), "SortDirection"));
 
-    self.currentSortOption.subscribe(function (val) {
+    self.CurrentSortOption.subscribe(function (val) {
         $.cookie("SortOption", val.Value, { expires: 10 });
     }, self);
 
-    self.currentSortDirection.subscribe(function (val) {
+    self.CurrentSortDirection.subscribe(function (val) {
         $.cookie("SortDirection", val.Value, { expires: 10 });
     }, self);
 
-    self.orderedRecords = ko.computed(function () {
-        var recordsValues = self.records();
-        var sortOption = self.currentSortOption();
-        var sortDirection = self.currentSortDirection();
+    self.OrderedRecords = ko.computed(function () {
+        var recordsValues = self.Records();
+        var sortOption = self.CurrentSortOption();
+        var sortDirection = self.CurrentSortDirection();
 
         if (sortOption == null || sortDirection == null) {
             return recordsValues;

@@ -1,7 +1,7 @@
 ﻿var MainViewModel = function () {
     var self = this;
 
-    self.books = ko.observableArray([]);
+    self.Books = ko.observableArray([]);
 
     var sortOptions = [
         {
@@ -16,17 +16,44 @@
         }
     ];
 
-    self.sorter = new KnockoutSorter(sortOptions, self.books);
+    self.Sorter = new KnockoutSorter(sortOptions, self.Books);
 
-    self.selectedBook = ko.observable();
+    self.SelectedBook = ko.observable();
 
     self.AddBook = function () {
         var book = new BookViewModel();
-        self.books.push(book);
-        self.selectedBook(book);
+        self.Books.push(book);
+        self.SelectedBook(book);
     };
 
-    self.EditForm = function (book) { self.selectedBook(book); };
+    self.EditForm = function (book) { self.SelectedBook(book); };
+
+    self.SaveBook = function () {
+        var book = self.SelectedBook();
+        if (book.Errors().length === 0) {
+            book.GeneralErrors.removeAll();
+            $.ajax({
+                url: "api/Book/Post",
+                type: "POST",
+                data: ko.toJSON(book),
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    book.Id = result.Id;
+                    alert("Book: " + book.Header() + " has been saved.");
+                },
+                statusCode: {
+                    400: function (result) {
+                        book.SetErrors(result);
+                    },
+                    500: function (result) {
+                        book.GeneralErrors.push(result.statusText + ". Please contact with developers.");
+                    }
+                }
+            });
+        } else {
+            book.Errors.showAllMessages();
+        }
+    };
 
     self.RemoveBook = function (book) {
         var header = book.Header();
@@ -36,8 +63,8 @@
                 type: "DELETE",
                 success: function () {
                     alert("Book: " + header + " has been removed.");
-                    self.books.remove(book);
-                    self.selectedBook(null);
+                    self.Books.remove(book);
+                    self.SelectedBook(null);
                 }
             });
         }
@@ -63,7 +90,7 @@
         })
             .done(function (data) {
                 var mappedBooks = $.map(data, function (item) { return new BookViewModel(item); });
-                self.books(mappedBooks);
+                self.Books(mappedBooks);
             })
             .error(function () {
                 alert("An error occurred when tried to load a books. Please contact with developers.");

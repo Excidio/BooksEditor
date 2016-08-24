@@ -178,9 +178,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Views\Book\Create.cshtml" />
-    <Content Include="Views\Book\Edit.cshtml" />
-    <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Scripts\libs\knockout.validation\knockout.validation.min.js.map" />
     <Content Include="Scripts\libs\jquery\jquery-1.10.2.min.map" />
     <None Include="Web.Debug.config">

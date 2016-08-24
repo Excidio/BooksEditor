@@ -38,7 +38,7 @@ namespace BooksEditor.Services.Implementation
 
         public bool IsValidIsbn(string isbn)
         {
-            return Isbn.TryValidate(isbn);
+            return IsbnValidator.TryValidate(isbn);
         }
     }
 }
